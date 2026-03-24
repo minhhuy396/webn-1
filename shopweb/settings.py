@@ -1,14 +1,18 @@
 from pathlib import Path
 import os
+import cloudinary
 
+# ========================
+# BASE DIR
+# ========================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ========================
+# SECURITY
+# ========================
 SECRET_KEY = 'django-insecure-(7xlbkaj5bmwnuucq5x#pr&rmzu7oc2()@0&b9gh0-bng1%#zn'
-
-DEBUG = False  # ❗ deploy phải để False
-
-ALLOWED_HOSTS = ['*']
-
+DEBUG = False  # Deploy luôn để False
+ALLOWED_HOSTS = ['*']  # Tốt nhất để host thật, ở đây '*' tạm ổn
 
 # ========================
 # APPS
@@ -20,20 +24,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'store',
     'django.contrib.humanize',
+
+    # App của bạn
+    'store',
+
+    # Cloudinary
     'cloudinary',
     'cloudinary_storage',
-
 ]
 
-
 # ========================
-# MIDDLEWARE (THÊM WHITENOISE)
+# MIDDLEWARE
 # ========================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # 🔥 thêm dòng này
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -42,12 +48,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'shopweb.urls'
 
-
 # ========================
-# TEMPLATE
+# TEMPLATES
 # ========================
 TEMPLATES = [
     {
@@ -66,20 +70,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shopweb.wsgi.application'
 
-
 # ========================
 # DATABASE
 # ========================
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',  # Thay PostgreSQL nếu deploy production
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-
 # ========================
-# PASSWORD
+# PASSWORD VALIDATORS
 # ========================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -88,39 +90,39 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # ========================
-# LANGUAGE
+# LANGUAGE & TIMEZONE
 # ========================
 LANGUAGE_CODE = 'vi'
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
 USE_I18N = True
 USE_TZ = True
 
-
 # ========================
-# STATIC (QUAN TRỌNG NHẤT)
+# STATIC FILES
 # ========================
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
 # ========================
-# MEDIA (tạm thời)
+# MEDIA FILES (Cloudinary)
 # ========================
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+cloudinary.config(
+    cloud_name='YOUR_CLOUD_NAME',
+    api_key='YOUR_API_KEY',
+    api_secret='YOUR_API_SECRET',
+)
 
 # ========================
-# AUTH
+# AUTH REDIRECTS
 # ========================
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
 
 # ========================
 # EMAIL
@@ -132,14 +134,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'nmhuy396@gmail.com'
 EMAIL_HOST_PASSWORD = 'xwhueauhyatstldf'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-import cloudinary
-
-cloudinary.config(
-    cloud_name='your_name',
-    api_key='your_key',
-    api_secret='your_secret'
-)
