@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<div class="top-announcement-bar">
+    <div class="container text-center">
+        <span class="delivery-text">
+            <i class="fas fa-shipping-fast"></i> ⚡ Giao hàng nhanh từ 2h trong nội thành TP.HCM
+        </span>
+    </div>
+</div>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Shop Dừa Đạn</title>
+
+    <style>
+        body.member img {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url('https://media.baovanhoa.vn/zoom/1000/uploaded/ngoctrung/2024_05_07/ben-tre-02_lqcm.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .member img {
+            width: 100%;
+            max-width: 120px;
+            height: auto;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .container-custom {
+            width: 1200px;
+            margin: auto;
+            max-width: 100%;
+        }
+
+        header {
+            background: #0D8833;
+        }
+
+        /* TOP BAR */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        /* FIX LOGO */
+        .logo-container img {
+            height: 70px;
+            width: auto;
+            flex-shrink: 0;
+        }
+
+        /* MENU */
+        .menu-bar {
+            text-align: center;
+            padding: 12px 0;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .menu {
+            display: inline-block;
+
+        }
+
+        .menu a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            color: #ffd700;
+        }
+
+        /* SEARCH */
+        .search-box {
+            display: flex;
+            justify-content: flex-end;
+            /* đẩy về bên phải */
+            align-items: center;
+        }
+
+        .search-box form {
+            display: flex;
+        }
+
+        .search-input {
+            padding: 10px;
+            width: 250px;
+            border: 2px solid #4b7d3e;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+        }
+
+        .search-btn {
+            padding: 10px 20px;
+            background: #4b7d3e;
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+        }
+
+        main {
+            min-height: 500px;
+            padding: 20px 0;
+        }
+
+        footer {
+            background: #0D8833;
+            margin-top: 40px;
+            padding: 30px 0;
+            border-top: 2px solid #d9cfc1;
+            color: #ffffff;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-box {
+            width: 30%;
+            color: #ffffff;
+        }
+
+        .footer-box h3 {
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .footer-box p {
+            margin: 5px 0;
+            color: #ffffff;
+        }
+
+        .footer-box a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .top-announcement-bar {
+            background: linear-gradient(to right, #ffff00, #ffff00);
+            color: #2e8b57;
+            padding: 8px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .delivery-text {
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Hover nhẹ */
+        .top-announcement-bar:hover {
+            opacity: 0.95;
+        }
+    </style>
+</head>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<body>
+    <header>
+        <div class="container-custom">
+
+            <!-- DÒNG 1: LOGO + SEARCH -->
+            <div class="top-bar">
+
+                <!-- LOGO -->
+                <div class="logo-container">
+                    <img src="{% static 'images/COCORAT.png' %}" style="height: 140px;">
+                </div>
+
+                <!-- SEARCH -->
+                <div class="search-box">
+                    <form method="GET" action="{% url 'search' %}" style="display:flex;">
+                        <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..." class="search-input">
+                        <button type="submit" class="search-btn">
+                            Tìm Kiếm
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- DÒNG 2: MENU -->
+            <div class="menu-bar">
+                <div class="menu">
+                    <a href="/">Trang Chủ</a>
+                    <a href="/about/">Giới Thiệu</a>
+                    <a href="/contact/">Liên Hệ</a>
+                    <a href="/cart/">🛒 Giỏ Hàng</a>
+
+                    {% if user.is_authenticated %}
+                    <span>👤 {{user.username}}</span>
+                    <a href="{% url 'logout' %}">Đăng Xuất</a>
+                    {% else %}
+                    <a href="/login/">👤 Tài Khoản</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    {% block banner_slider %}
+    {% endblock banner_slider %}
+
+    <main class="container-custom">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="container-custom">
+            <div class="footer-content">
+                <div class="footer-box">
+                    <h3>Thông Tin Liên Hệ</h3>
+                    <p>📍 Địa chỉ: Ba Tri,Bến Tre</p>
+                    <p>📞 Hotline: 0868893382</p>
+                    <p>📧 Email: huyd74399@gmail.com</p>
+                </div>
+
+                <div class="footer-box">
+                    <h3>Liên Kết</h3>
+                    <p><a href="/">Trang Chủ</a></p>
+                    <p><a href="/about/">Giới Thiệu</a></p>
+                    <p><a href="/contact/">Liên Hệ</a></p>
+                    <p><a href="/cart/">Giỏ Hàng</a></p>
+                </div>
+
+                <div class="footer-box">
+                    <h3>Kết Nối</h3>
+                    <p>
+                        <a href="https://www.facebook.com/nguyen.huy.431017?locale=vi_VN" target="_blank"
+                            rel="noopener noreferrer">
+                            Facebook
+                        </a>
+                    </p>
+                    <p>
+                        <a href="https://zalo.me/0389586553" target="_blank" rel="noopener noreferrer">
+                            Zalo
+                        </a>
+                    </p>
+                    <p>
+                        <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJlDSvcXpCDHnHLMMfBcfGRDZrWwQQnPHcrxCkkldHlWmdHtrhbLLGcBrgSBWpHZzCjwvDV"
+                            target="_blank">
+                            Email
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

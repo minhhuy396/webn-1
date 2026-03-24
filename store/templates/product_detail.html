@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+
+<!-- ===== CSS ===== -->
+<style>
+    /* Layout */
+    .product-container {
+        width: 70%;
+        margin: auto;
+        display: flex;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    /* Slider */
+    .slider-box {
+        width: 50%;
+    }
+
+    .swiper-main {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .swiper-main img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .swiper-thumb {
+        margin-top: 10px;
+    }
+
+    .swiper-thumb img {
+        width: 100%;
+        height: 80px;
+        object-fit: cover;
+        opacity: 0.5;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+
+    .swiper-thumb .swiper-slide-thumb-active img {
+        opacity: 1;
+        border: 2px solid #2f7d3c;
+    }
+
+    /* Info */
+    .product-info {
+        width: 50%;
+    }
+
+    .price {
+        color: red;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .add-cart {
+        background: #6b8e23;
+    }
+
+    .buy-now {
+        background: #ff5722;
+    }
+
+    .buy-now:hover {
+        background: #e64a19;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+</style>
+
+
+<div class="product-container">
+
+    <!-- ===== SLIDER ===== -->
+    <div class="slider-box">
+
+        <!-- Slider chính -->
+        <div class="swiper swiper-main">
+            <div class="swiper-wrapper">
+
+                <!-- ảnh chính -->
+                {% if product.image %}
+                <div class="swiper-slide">
+                    <img src="{{ product.image.url }}">
+                </div>
+                {% endif %}
+
+                <!-- ảnh phụ -->
+                {% for img in product.images.all %}
+                <div class="swiper-slide">
+                    <img src="{{ img.image.url }}">
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+
+        <!-- Thumbnail -->
+        <div class="swiper swiper-thumb">
+            <div class="swiper-wrapper">
+
+                {% if product.image %}
+                <div class="swiper-slide">
+                    <img src="{{ product.image.url }}">
+                </div>
+                {% endif %}
+
+                {% for img in product.images.all %}
+                <div class="swiper-slide">
+                    <img src="{{ img.image.url }}">
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ===== THÔNG TIN ===== -->
+    <div class="product-info">
+
+        <h2>{{ product.name }}</h2>
+
+        <p class="price">{{ product.price }} đ</p>
+
+        <p>{{ product.description }}</p>
+
+        <!-- ===== NÚT ===== -->
+        <div class="btn-group">
+
+            <!-- Thêm vào giỏ -->
+            <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn add-cart">🛒 Thêm vào giỏ</button>
+            </form>
+
+            <!-- Mua ngay -->
+            <form action="{% url 'buy_now' product.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn buy-now">⚡ Mua ngay</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const thumbSwiper = new Swiper(".swiper-thumb", {
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+        });
+
+        const mainSwiper = new Swiper(".swiper-main", {
+            loop: true,
+            spaceBetween: 10,
+            speed: 800,
+
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+
+            thumbs: {
+                swiper: thumbSwiper,
+            },
+
+            effect: "fade",
+            fadeEffect: { crossFade: true }
+        });
+
+    });
+</script>
+
+{% endblock %}

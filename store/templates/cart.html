@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        padding: 50px 20px;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 40px;
+        margin-bottom: 30px;
+        color: #2e8b57;
+    }
+
+    .cart-card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+    }
+
+    th {
+        background: #f5f5f5;
+    }
+
+    .product {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .product img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .remove {
+        color: red;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .remove:hover {
+        color: #b71c1c;
+    }
+
+    /* Tổng tiền */
+
+    .total {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    /* nút thanh toán */
+
+    .btn-checkout {
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        padding: 12px 25px;
+        background: #e53935;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .btn-checkout:hover {
+        background: #c62828;
+    }
+</style>
+
+<div class="container">
+
+    <h1 class="title">🛒 Giỏ hàng</h1>
+
+    <div class="cart-card">
+
+        <table>
+
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Xóa</th>
+            </tr>
+
+            {% for item in items %}
+
+            <tr>
+
+                <td>
+                    <div class="product">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" width="80">
+                        {% else %}
+                        <img src="{% static 'store/no-image.png' %}" width="80">
+                        {% endif %}
+                        {{ item.product.name }}
+                    </div>
+                </td>
+
+                <td>{{ item.product.price }} đ</td>
+
+                <td>{{ item.quantity }}</td>
+
+                <td>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="remove">
+                        ❌
+                    </a>
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <div class="total">
+            Tổng tiền: {{ total }} đ
+        </div>
+
+        <a href="/checkout/">
+            <button class="btn-checkout">
+                Thanh toán
+            </button>
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
