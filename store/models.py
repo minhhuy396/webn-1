@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import intcomma
+import cloudinary.models
 
 
 # =========================
@@ -16,21 +17,19 @@ class Category(models.Model):
         blank=True,
         related_name='children'
     )
+
     def __str__(self):
         return self.name
-    
 
 
 # =========================
 # Product
 # =========================
 class Product(models.Model):
-
     name = models.CharField(max_length=200)
-
     description = models.TextField()
 
-    # ⭐ THÊM CATEGORY 
+    # ⭐ Category
     category = models.ForeignKey(
         'Category',
         on_delete=models.SET_NULL,
@@ -39,18 +38,19 @@ class Product(models.Model):
         related_name='products'
     )
 
-    # tiền tệ
+    # Giá
     price = models.DecimalField(max_digits=10, decimal_places=0)
 
-    image = models.ImageField(upload_to='products/', null=True, blank=True)
+    # Dùng CloudinaryField thay vì ImageField
+    image = cloudinary.models.CloudinaryField('image', blank=True, null=True)
 
     def __str__(self):
         return self.name
 
-    # ảnh fallback
+    # fallback image
     @property
     def imageURL(self):
-        if self.image and hasattr(self.image, 'url'):
+        if self.image:
             return self.image.url
         return '/static/store/no-image.png'
 
@@ -61,7 +61,7 @@ class Product(models.Model):
 
 
 # =========================
-# Product Image
+# Product Image (nhiều ảnh)
 # =========================
 class ProductImage(models.Model):
     product = models.ForeignKey(
@@ -69,7 +69,7 @@ class ProductImage(models.Model):
         on_delete=models.CASCADE,
         related_name='images'
     )
-    image = models.ImageField(upload_to='products/')
+    image = cloudinary.models.CloudinaryField('image')
 
     def __str__(self):
         return f"Image of {self.product.name}"
